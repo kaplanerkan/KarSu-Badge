@@ -4,6 +4,10 @@ Lightweight and customizable badge drawable library for Android, written in Kotl
 
 Inspired by [nekocode/Badge](https://github.com/nekocode/Badge).
 
+[![](https://jitpack.io/v/kaplanerkan/KarSu-Badge.svg)](https://jitpack.io/#kaplanerkan/KarSu-Badge)
+
+[**Download Sample APK**](https://github.com/kaplanerkan/KarSu-Badge/releases/latest/download/KarsuBadge-1.0.1-sample.apk)
+
 ## Screenshots
 
 <p align="center">
