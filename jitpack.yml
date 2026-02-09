@@ -1,0 +1,4 @@
+jdk:
+  - openjdk21
+before_install:
+  - sdk-manager --install "build-tools;36.0.0" "platforms;android-36"

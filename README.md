@@ -27,7 +27,29 @@ Inspired by [nekocode/Badge](https://github.com/nekocode/Badge).
 
 ## Setup
 
-Add the `karsu_badge` module to your project:
+### Option 1: JitPack (Remote Dependency)
+
+[![](https://jitpack.io/v/kaplanerkan/KarSu-Badge.svg)](https://jitpack.io/#kaplanerkan/KarSu-Badge)
+
+**settings.gradle.kts**
+```kotlin
+dependencyResolutionManagement {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url = uri("https://jitpack.io") }
+    }
+}
+```
+
+**app/build.gradle.kts**
+```kotlin
+dependencies {
+    implementation("com.github.kaplanerkan:KarSu-Badge:1.0.0")
+}
+```
+
+### Option 2: Local Module
 
 **settings.gradle.kts**
 ```kotlin
