@@ -34,52 +34,52 @@ import androidx.annotation.ColorInt
 import androidx.annotation.IntDef
 
 /**
- * Ozellestirilerbilir badge (rozet) drawable sinifi.
+ * A customizable badge drawable class.
  *
- * 4 farkli badge tipini destekler:
- * - [TYPE_NUMBER]: Yuvarlak sayi badge'i (orn. bildirim sayisi)
- * - [TYPE_ONLY_ONE_TEXT]: Tek metin iceren badge (orn. "VIP")
- * - [TYPE_WITH_TWO_TEXT]: Cift bolumlu metin badge'i, beyaz arka planli (orn. "TEST | Pass")
- * - [TYPE_WITH_TWO_TEXT_COMPLEMENTARY]: Cift bolumlu tamamlayici badge (orn. "LEVEL | 10")
+ * Supports 4 different badge types:
+ * - [TYPE_NUMBER]: Circular number badge (e.g. notification count)
+ * - [TYPE_ONLY_ONE_TEXT]: Single text badge (e.g. "VIP")
+ * - [TYPE_WITH_TWO_TEXT]: Dual-section badge with white backgrounds (e.g. "TEST | Pass")
+ * - [TYPE_WITH_TWO_TEXT_COMPLEMENTARY]: Dual-section complementary badge (e.g. "LEVEL | 10")
  *
- * Kullanim ornekleri:
+ * Usage examples:
  * ```kotlin
- * // Builder pattern ile
+ * // Builder pattern
  * val badge = BadgeDrawable.Builder()
  *     .type(BadgeDrawable.TYPE_ONLY_ONE_TEXT)
  *     .text1("VIP")
  *     .badgeColor(0xff336699.toInt())
  *     .build()
  *
- * // Kotlin DSL ile
+ * // Kotlin DSL
  * val badge = badgeDrawable {
  *     type(BadgeDrawable.TYPE_NUMBER)
  *     number(9)
  * }
  *
- * // TextView icinde kullanim
+ * // Inline usage in a TextView
  * textView.text = badge.toSpannable()
  * ```
  */
 class BadgeDrawable private constructor(private val config: Config) : Drawable() {
 
     companion object {
-        /** Yuvarlak sayi badge tipi. Sayi sigmazsa "..." gosterir. */
+        /** Circular number badge type. Shows ellipsis when the number does not fit. */
         const val TYPE_NUMBER = 1
 
-        /** Tek metin iceren dikdortgen badge tipi. */
+        /** Rectangular single-text badge type. */
         const val TYPE_ONLY_ONE_TEXT = 1 shl 1
 
-        /** Cift metin, iki bolum de beyaz arka planli badge tipi. */
+        /** Dual-text badge type with both sections having white backgrounds. */
         const val TYPE_WITH_TWO_TEXT = 1 shl 2
 
-        /** Cift metin, ikinci bolum tamamlayici renkli badge tipi. */
+        /** Dual-text badge type with complementary-colored second section. */
         const val TYPE_WITH_TWO_TEXT_COMPLEMENTARY = 1 shl 3
 
         /**
-         * dp degerini piksel cinsine donusturur.
-         * @param dipValue dp cinsinden deger
-         * @return piksel cinsinden deger
+         * Converts a dp value to pixels.
+         * @param dipValue value in dp
+         * @return value in pixels
          */
         private fun dipToPixels(dipValue: Float): Float {
             val scale = Resources.getSystem().displayMetrics.density
@@ -87,9 +87,9 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
         }
 
         /**
-         * sp degerini piksel cinsine donusturur.
-         * @param spValue sp cinsinden deger
-         * @return piksel cinsinden deger
+         * Converts an sp value to pixels.
+         * @param spValue value in sp
+         * @return value in pixels
          */
         private fun spToPixels(spValue: Float): Float {
             return TypedValue.applyDimension(
@@ -98,14 +98,14 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
         }
     }
 
-    /** Badge tipini sinirlandiran annotation. */
+    /** Annotation that restricts values to valid badge types. */
     @IntDef(TYPE_NUMBER, TYPE_ONLY_ONE_TEXT, TYPE_WITH_TWO_TEXT, TYPE_WITH_TWO_TEXT_COMPLEMENTARY)
     @Retention(AnnotationRetention.SOURCE)
     annotation class BadgeType
 
     /**
-     * Badge'in tum yapilandirma degerlerini tutan dahili sinif.
-     * Builder tarafindan olusturulur ve BadgeDrawable'a aktarilir.
+     * Internal class holding all badge configuration values.
+     * Created by the Builder and passed to BadgeDrawable.
      */
     internal class Config(
         @param:BadgeType var badgeType: Int = TYPE_NUMBER,
@@ -125,7 +125,7 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
         var paddingCenter: Float = dipToPixels(3f),
         var strokeWidth: Int = dipToPixels(1f).toInt()
     ) {
-        /** Config'in bagimsiz bir kopyasini olusturur (buildUpon icin). */
+        /** Creates an independent copy of this Config (used by buildUpon). */
         fun copy(): Config = Config(
             badgeType, number, text1, text2, textSize,
             badgeColor, textColor, text2Color, typeface, cornerRadius,
@@ -134,27 +134,27 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
         )
     }
 
-    // -- Arka plan drawable'lari --
-    /** Tum badge icin arka plan shape drawable. */
+    // -- Background drawables --
+    /** Background shape drawable for the entire badge. */
     private val backgroundDrawable: ShapeDrawable
-    /** TYPE_WITH_TWO_TEXT tipinde text1 bolumu icin arka plan. */
+    /** Background for the text1 section in TYPE_WITH_TWO_TEXT. */
     private val backgroundDrawableOfText1: ShapeDrawable
-    /** TYPE_WITH_TWO_TEXT / COMPLEMENTARY tipinde text2 bolumu icin arka plan. */
+    /** Background for the text2 section in TYPE_WITH_TWO_TEXT / COMPLEMENTARY. */
     private val backgroundDrawableOfText2: ShapeDrawable
 
-    // -- Boyut degiskenleri --
+    // -- Size variables --
     private var badgeWidth: Int = 0
     private var badgeHeight: Int = 0
 
-    // -- Kose yuvarlama dizileri (RoundRectShape icin 8 float) --
-    /** Tum badge icin kose yuvarlakliklari. */
+    // -- Corner radius arrays (8 floats for RoundRectShape) --
+    /** Corner radii for the full badge. */
     private val outerR = FloatArray(8)
-    /** Text1 bolumu: sadece sol kose yuvarlak. */
+    /** Text1 section: only left corners rounded. */
     private val outerROfText1 = FloatArray(8)
-    /** Text2 bolumu: sadece sag kose yuvarlak. */
+    /** Text2 section: only right corners rounded. */
     private val outerROfText2 = FloatArray(8)
 
-    /** Metin ve sekil cizimi icin kullanilan Paint nesnesi. */
+    /** Paint object used for drawing text and shapes. */
     private val paint = Paint().apply {
         isAntiAlias = true
         typeface = config.typeface
@@ -162,12 +162,12 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
         style = Paint.Style.FILL
         alpha = 255
     }
-    /** Metin dikey hizalamasi icin font metrikleri. */
+    /** Font metrics for vertical text alignment. */
     private var fontMetrics: Paint.FontMetrics
 
-    /** Olculen text1 genisligi (piksel). */
+    /** Measured text1 width in pixels. */
     private var text1Width: Int = 0
-    /** Olculen text2 genisligi (piksel). */
+    /** Measured text2 width in pixels. */
     private var text2Width: Int = 0
 
     init {
@@ -183,11 +183,11 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
     }
 
     // ════════════════════════════════════════
-    //  Builder - Badge olusturma sinifi
+    //  Builder - Badge construction class
     // ════════════════════════════════════════
 
     /**
-     * BadgeDrawable olusturmak icin Builder sinifi.
+     * Builder class for creating a BadgeDrawable.
      *
      * ```kotlin
      * val badge = BadgeDrawable.Builder()
@@ -204,48 +204,48 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
             config = Config()
         }
 
-        /** Mevcut Config ile Builder olusturur (buildUpon icin). */
+        /** Creates a Builder with an existing Config (used by buildUpon). */
         internal constructor(config: Config) {
             this.config = config
         }
 
-        /** Badge tipini ayarlar. [TYPE_NUMBER], [TYPE_ONLY_ONE_TEXT], [TYPE_WITH_TWO_TEXT], [TYPE_WITH_TWO_TEXT_COMPLEMENTARY] */
+        /** Sets the badge type. [TYPE_NUMBER], [TYPE_ONLY_ONE_TEXT], [TYPE_WITH_TWO_TEXT], [TYPE_WITH_TWO_TEXT_COMPLEMENTARY] */
         fun type(@BadgeType type: Int): Builder = apply { config.badgeType = type }
 
-        /** TYPE_NUMBER tipinde gosterilecek sayiyi ayarlar. */
+        /** Sets the number to display (for TYPE_NUMBER). */
         fun number(number: Int): Builder = apply { config.number = number }
 
-        /** Birinci metin alanini ayarlar. */
+        /** Sets the first text field. */
         fun text1(text1: String): Builder = apply { config.text1 = text1 }
 
-        /** Ikinci metin alanini ayarlar (cift metinli tipler icin). */
+        /** Sets the second text field (for dual-text types). */
         fun text2(text2: String): Builder = apply { config.text2 = text2 }
 
-        /** Metin boyutunu piksel cinsinden ayarlar. */
+        /** Sets the text size in pixels. */
         fun textSize(size: Float): Builder = apply { config.textSize = size }
 
-        /** Badge arka plan rengini ayarlar. */
+        /** Sets the badge background color. */
         fun badgeColor(@ColorInt color: Int): Builder = apply { config.badgeColor = color }
 
-        /** Metin rengini ayarlar. */
+        /** Sets the text color. */
         fun textColor(@ColorInt color: Int): Builder = apply { config.textColor = color }
 
-        /** COMPLEMENTARY tipinde text2 arka plan rengini ayarlar. null ise textColor kullanilir. */
+        /** Sets the text2 section background color for COMPLEMENTARY type. Uses textColor if null. */
         fun text2Color(@ColorInt color: Int): Builder = apply { config.text2Color = color }
 
-        /** Yazi tipini (font) ayarlar. */
+        /** Sets the font typeface. */
         fun typeface(typeface: Typeface): Builder = apply { config.typeface = typeface }
 
-        /** Kose yuvarlama yaricapini piksel cinsinden ayarlar. */
+        /** Sets the corner radius in pixels. */
         fun cornerRadius(radius: Float): Builder = apply { config.cornerRadius = radius }
 
         /**
-         * Badge ic bosluk (padding) degerlerini ayarlar.
-         * @param left sol bosluk
-         * @param top ust bosluk
-         * @param right sag bosluk
-         * @param bottom alt bosluk
-         * @param center cift metinli tiplerde iki bolum arasi bosluk
+         * Sets badge padding values.
+         * @param left left padding
+         * @param top top padding
+         * @param right right padding
+         * @param bottom bottom padding
+         * @param center spacing between the two sections in dual-text types
          */
         fun padding(
             left: Float = config.paddingLeft,
@@ -261,20 +261,20 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
             config.paddingCenter = center
         }
 
-        /** Cizgi kalinligini piksel cinsinden ayarlar (cift metinli tiplerde ic border). */
+        /** Sets the stroke width in pixels (inner border for dual-text types). */
         fun strokeWidth(width: Int): Builder = apply { config.strokeWidth = width }
 
-        /** Yapilandirmaya gore BadgeDrawable olusturur ve dondurur. */
+        /** Builds and returns a BadgeDrawable based on the current configuration. */
         fun build(): BadgeDrawable = BadgeDrawable(config)
     }
 
     // ════════════════════════════════════════
-    //  Public API - Getter/Setter metodlari
+    //  Public API - Getters / Setters
     // ════════════════════════════════════════
 
     /**
-     * Mevcut ayarlardan yeni bir Builder olusturur.
-     * Badge'i kopyalayip degistirmek icin kullanilir.
+     * Creates a new Builder from the current configuration.
+     * Useful for cloning and modifying a badge.
      *
      * ```kotlin
      * val newBadge = existingBadge.buildUpon()
@@ -284,46 +284,46 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
      */
     fun buildUpon(): Builder = Builder(config.copy())
 
-    /** Mevcut badge tipini dondurur. */
+    /** Returns the current badge type. */
     @BadgeType
     fun getBadgeType(): Int = config.badgeType
 
-    /** Badge tipini degistirir ve yeniden olcer. */
+    /** Changes the badge type and re-measures. */
     fun setBadgeType(@BadgeType type: Int) {
         config.badgeType = type
         measureBadge()
     }
 
-    /** Gosterilen sayiyi dondurur. */
+    /** Returns the displayed number. */
     fun getNumber(): Int = config.number
 
-    /** Gosterilecek sayiyi ayarlar (TYPE_NUMBER icin). */
+    /** Sets the number to display (for TYPE_NUMBER). */
     fun setNumber(number: Int) {
         config.number = number
     }
 
-    /** Birinci metin alanini dondurur. */
+    /** Returns the first text field. */
     fun getText1(): String = config.text1
 
-    /** Birinci metni ayarlar ve badge'i yeniden olcer. */
+    /** Sets the first text and re-measures the badge. */
     fun setText1(text1: String) {
         config.text1 = text1
         measureBadge()
     }
 
-    /** Ikinci metin alanini dondurur. */
+    /** Returns the second text field. */
     fun getText2(): String = config.text2
 
-    /** Ikinci metni ayarlar ve badge'i yeniden olcer. */
+    /** Sets the second text and re-measures the badge. */
     fun setText2(text2: String) {
         config.text2 = text2
         measureBadge()
     }
 
-    /** Metin boyutunu dondurur (piksel). */
+    /** Returns the text size in pixels. */
     fun getTextSize(): Float = config.textSize
 
-    /** Metin boyutunu ayarlar, paint'i gunceller ve badge'i yeniden olcer. */
+    /** Sets the text size, updates the paint, and re-measures the badge. */
     fun setTextSize(textSize: Float) {
         config.textSize = textSize
         paint.textSize = textSize
@@ -331,41 +331,41 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
         measureBadge()
     }
 
-    /** Badge arka plan rengini dondurur. */
+    /** Returns the badge background color. */
     @ColorInt
     fun getBadgeColor(): Int = config.badgeColor
 
-    /** Badge arka plan rengini ayarlar. */
+    /** Sets the badge background color. */
     fun setBadgeColor(@ColorInt color: Int) {
         config.badgeColor = color
     }
 
-    /** Metin rengini dondurur. */
+    /** Returns the text color. */
     @ColorInt
     fun getTextColor(): Int = config.textColor
 
-    /** Metin rengini ayarlar. */
+    /** Sets the text color. */
     fun setTextColor(@ColorInt color: Int) {
         config.textColor = color
     }
 
-    /** Yazi tipini dondurur. */
+    /** Returns the font typeface. */
     fun getTypeface(): Typeface = config.typeface
 
-    /** Yazi tipini ayarlar ve paint'e uygular. */
+    /** Sets the font typeface and applies it to the paint. */
     fun setTypeface(typeface: Typeface) {
         config.typeface = typeface
         paint.typeface = typeface
     }
 
-    /** Kose yuvarlama yaricapini dondurur. */
+    /** Returns the corner radius. */
     fun getCornerRadius(): Float = config.cornerRadius
 
     /**
-     * Kose yuvarlama yaricapini ayarlar.
-     * - outerR: tum koseler yuvarlak (tek metin / sayi badge)
-     * - outerROfText1: sadece sol koseler yuvarlak (cift metin sol bolum)
-     * - outerROfText2: sadece sag koseler yuvarlak (cift metin sag bolum)
+     * Sets the corner radius.
+     * - outerR: all corners rounded (single text / number badge)
+     * - outerROfText1: only left corners rounded (dual-text left section)
+     * - outerROfText2: only right corners rounded (dual-text right section)
      */
     fun setCornerRadius(radius: Float) {
         config.cornerRadius = radius
@@ -390,26 +390,26 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
         outerROfText2[5] = radius
     }
 
-    /** Cizgi kalinligini dondurur. */
+    /** Returns the stroke width. */
     fun getStrokeWidth(): Int = config.strokeWidth
 
-    /** Cizgi kalinligini ayarlar. */
+    /** Sets the stroke width. */
     fun setStrokeWidth(width: Int) {
         config.strokeWidth = width
     }
 
     // ════════════════════════════════════════
-    //  Olcum - Badge boyutlarini hesaplar
+    //  Measurement - Calculates badge dimensions
     // ════════════════════════════════════════
 
     /**
-     * Badge genislik ve yuksekligini badge tipine gore hesaplar.
+     * Calculates badge width and height based on the badge type.
      *
-     * - TYPE_NUMBER: Yuvarlak badge, genislik = textSize + padding
-     * - TYPE_ONLY_ONE_TEXT: text1 genisligi + padding
+     * - TYPE_NUMBER: Circular badge, width = textSize + padding
+     * - TYPE_ONLY_ONE_TEXT: text1 width + padding
      * - TYPE_WITH_TWO_TEXT / COMPLEMENTARY: text1 + text2 + padding + paddingCenter
      *
-     * Eger bounds ayarliysa ve badge bounds'tan genisse, metinler kirpilir.
+     * If bounds are set and the badge is wider than bounds, text widths are clipped.
      */
     private fun measureBadge() {
         badgeHeight = (config.textSize + config.paddingTop + config.paddingBottom).toInt()
@@ -438,7 +438,7 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
             }
         }
 
-        // Bounds ayarliysa ve badge sigmiiyorsa metin genisliklerini kirp
+        // If bounds are set and badge doesn't fit, clip text widths
         val boundsWidth = bounds.width()
         if (boundsWidth > 0) {
             when (config.badgeType) {
@@ -469,12 +469,12 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
     }
 
     // ════════════════════════════════════════
-    //  Cizim - Canvas uzerine badge cizer
+    //  Drawing - Renders badge onto canvas
     // ════════════════════════════════════════
 
     /**
-     * Bounds degistiginde badge'i yeniden olcer.
-     * Boylece farkli boyutlu alanlara yerlestirildiginde otomatik uyum saglar.
+     * Re-measures the badge when bounds change.
+     * Ensures automatic adaptation when placed in different-sized areas.
      */
     override fun setBounds(left: Int, top: Int, right: Int, bottom: Int) {
         super.setBounds(left, top, right, bottom)
@@ -482,22 +482,22 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
     }
 
     /**
-     * Badge'i canvas uzerine cizer.
+     * Draws the badge onto the canvas.
      *
-     * Cizim sirasi badge tipine gore degisir:
-     * - TYPE_NUMBER: Arka plan + ortaya sayi
-     * - TYPE_ONLY_ONE_TEXT: Arka plan + ortaya text1
-     * - TYPE_WITH_TWO_TEXT: Arka plan + beyaz text1 bolumu + beyaz text2 bolumu + renkli metinler
-     * - TYPE_WITH_TWO_TEXT_COMPLEMENTARY: Arka plan + text1 + renkli text2 arka plani + ters renkli text2
+     * Drawing order varies by badge type:
+     * - TYPE_NUMBER: Background + centered number
+     * - TYPE_ONLY_ONE_TEXT: Background + centered text1
+     * - TYPE_WITH_TWO_TEXT: Background + white text1 section + white text2 section + colored text
+     * - TYPE_WITH_TWO_TEXT_COMPLEMENTARY: Background + text1 + colored text2 background + inverted text2
      */
     override fun draw(canvas: Canvas) {
         val bounds: Rect = bounds
 
-        // Badge'i bounds icinde ortalamak icin margin hesapla
+        // Calculate margins to center the badge within bounds
         val marginTopAndBottom = ((bounds.height() - badgeHeight) / 2f).toInt()
         val marginLeftAndRight = ((bounds.width() - badgeWidth) / 2f).toInt()
 
-        // Ana arka plan cizimi (tum badge tipleri icin ortak)
+        // Draw main background (common for all badge types)
         backgroundDrawable.setBounds(
             bounds.left + marginLeftAndRight,
             bounds.top + marginTopAndBottom,
@@ -507,7 +507,7 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
         backgroundDrawable.paint.color = config.badgeColor
         backgroundDrawable.draw(canvas)
 
-        // Metin dikey orta noktasi (font metriklerine gore)
+        // Vertical text center point (based on font metrics)
         val textCx = bounds.centerX().toFloat()
         val textCy = bounds.centerY() - (fontMetrics.bottom + fontMetrics.top) / 2f
 
@@ -515,15 +515,15 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
         val t2 = config.text2
 
         when (config.badgeType) {
-            // Tek metin: badge ortasina text1 yaz
+            // Single text: draw text1 at badge center
             TYPE_ONLY_ONE_TEXT -> {
                 paint.color = config.textColor
                 canvas.drawText(cutText(t1, text1Width), textCx, textCy, paint)
             }
 
-            // Tamamlayici cift metin: text1 solda, text2 sag bolumde ters renkli
+            // Complementary dual text: text1 on left, text2 on right with inverted colors
             TYPE_WITH_TWO_TEXT_COMPLEMENTARY -> {
-                // Text1'i sol tarafa yaz
+                // Draw text1 on the left side
                 paint.color = config.textColor
                 canvas.drawText(
                     t1,
@@ -532,7 +532,7 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
                     paint
                 )
 
-                // Text2 icin sag tarafa tamamlayici arka plan ciz
+                // Draw complementary background for text2 on the right side
                 backgroundDrawableOfText2.setBounds(
                     (bounds.left + marginLeftAndRight + config.paddingLeft +
                             text1Width + config.paddingCenter / 2f).toInt(),
@@ -543,7 +543,7 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
                 backgroundDrawableOfText2.paint.color = config.text2Color ?: config.textColor
                 backgroundDrawableOfText2.draw(canvas)
 
-                // Text2'yi badge rengiyle (ters renk) yaz
+                // Draw text2 with badge color (inverted)
                 paint.color = config.badgeColor
                 canvas.drawText(
                     cutText(t2, text2Width),
@@ -553,9 +553,9 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
                 )
             }
 
-            // Cift metin: her iki bolum beyaz arka planli, metinler badge renkli
+            // Dual text: both sections with white backgrounds, text in badge color
             TYPE_WITH_TWO_TEXT -> {
-                // Text1 icin sol beyaz arka plan
+                // White background for text1 (left section)
                 backgroundDrawableOfText1.setBounds(
                     bounds.left + marginLeftAndRight + config.strokeWidth,
                     bounds.top + marginTopAndBottom + config.strokeWidth,
@@ -566,7 +566,7 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
                 backgroundDrawableOfText1.paint.color = 0xffFFFFFF.toInt()
                 backgroundDrawableOfText1.draw(canvas)
 
-                // Text1'i badge rengiyle yaz
+                // Draw text1 in badge color
                 paint.color = config.badgeColor
                 canvas.drawText(
                     t1,
@@ -575,7 +575,7 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
                     paint
                 )
 
-                // Text2 icin sag beyaz arka plan
+                // White background for text2 (right section)
                 backgroundDrawableOfText2.setBounds(
                     (bounds.left + marginLeftAndRight + config.paddingLeft +
                             text1Width + config.paddingCenter / 2f + config.strokeWidth / 2f).toInt(),
@@ -586,7 +586,7 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
                 backgroundDrawableOfText2.paint.color = 0xffFFFFFF.toInt()
                 backgroundDrawableOfText2.draw(canvas)
 
-                // Text2'yi badge rengiyle yaz
+                // Draw text2 in badge color
                 paint.color = config.badgeColor
                 canvas.drawText(
                     cutText(t2, text2Width),
@@ -596,7 +596,7 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
                 )
             }
 
-            // Sayi badge: ortaya sayi yaz
+            // Number badge: draw number at center
             else -> { // TYPE_NUMBER
                 paint.color = config.textColor
                 canvas.drawText(cutNumber(config.number, badgeWidth), textCx, textCy, paint)
@@ -604,18 +604,18 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
         }
     }
 
-    /** Badge'in dogal genisligini dondurur (olculmus genislik). */
+    /** Returns the intrinsic (measured) width of the badge. */
     override fun getIntrinsicWidth(): Int = badgeWidth
 
-    /** Badge'in dogal yuksekligini dondurur (olculmus yukseklik). */
+    /** Returns the intrinsic (measured) height of the badge. */
     override fun getIntrinsicHeight(): Int = badgeHeight
 
-    /** Drawable seffaflik degerini ayarlar (0-255). */
+    /** Sets the drawable alpha transparency (0-255). */
     override fun setAlpha(alpha: Int) {
         paint.alpha = alpha
     }
 
-    /** Drawable renk filtresini ayarlar. */
+    /** Sets the drawable color filter. */
     override fun setColorFilter(colorFilter: ColorFilter?) {
         paint.colorFilter = colorFilter
     }
@@ -624,14 +624,14 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
     override fun getOpacity(): Int = PixelFormat.TRANSLUCENT
 
     // ════════════════════════════════════════
-    //  Yardimci metodlar
+    //  Helper methods
     // ════════════════════════════════════════
 
     /**
-     * Sayi mevcut genislige sigmiiyorsa "..." (ellipsis) karakteri dondurur.
-     * @param number gosterilecek sayi
-     * @param width mevcut piksel genisligi
-     * @return sayi metni veya "..." karakteri
+     * Returns the ellipsis character if the number does not fit in the given width.
+     * @param number the number to display
+     * @param width available width in pixels
+     * @return the number as a string, or an ellipsis character
      */
     private fun cutNumber(number: Int, width: Int): String {
         val text = number.toString()
@@ -639,11 +639,11 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
     }
 
     /**
-     * Metni mevcut genislige sigdirmak icin kirpar ve sonuna "..." ekler.
-     * Metin sigmiyorsa karakter karakter kisaltir, hala sigmiyorsa "..." noktalarini da azaltir.
-     * @param text kirpilacak metin
-     * @param width mevcut piksel genisligi
-     * @return kirpilmis metin veya orijinal metin
+     * Truncates text to fit within the given width, appending "..." as a suffix.
+     * Removes characters one by one; if still too wide, also reduces the suffix dots.
+     * @param text the text to truncate
+     * @param width available width in pixels
+     * @return the truncated text or the original if it fits
      */
     private fun cutText(text: String, width: Int): String {
         if (paint.measureText(text) <= width) return text
@@ -663,15 +663,14 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
     }
 
     /**
-     * Badge'i SpannableString'e donusturur.
-     * TextView icinde satir ici (inline) badge gostermek icin kullanilir.
+     * Converts the badge to a SpannableString for inline use in a TextView.
      *
      * ```kotlin
-     * val text = TextUtils.concat("Mesaj: ", badge.toSpannable(), " diger metin")
+     * val text = TextUtils.concat("Message: ", badge.toSpannable(), " more text")
      * textView.text = text
      * ```
      *
-     * @return Badge'i iceren SpannableString
+     * @return a SpannableString containing this badge
      */
     fun toSpannable(): SpannableString {
         val spanStr = SpannableString(" ")
@@ -686,22 +685,22 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
 }
 
 // ════════════════════════════════════════
-//  Kotlin DSL uzanti fonksiyonu
+//  Kotlin DSL extension function
 // ════════════════════════════════════════
 
 /**
- * BadgeDrawable olusturmak icin Kotlin DSL fonksiyonu.
+ * Kotlin DSL function for creating a BadgeDrawable.
  *
  * ```kotlin
  * val badge = badgeDrawable {
  *     type(BadgeDrawable.TYPE_ONLY_ONE_TEXT)
- *     text1("Yeni")
+ *     text1("New")
  *     badgeColor(0xff336699.toInt())
  * }
  * ```
  *
- * @param block Builder uzerinde yapilandirma blogu
- * @return yapilandirilmis BadgeDrawable
+ * @param block configuration block on the Builder
+ * @return a configured BadgeDrawable
  */
 inline fun badgeDrawable(block: BadgeDrawable.Builder.() -> Unit): BadgeDrawable {
     return BadgeDrawable.Builder().apply(block).build()

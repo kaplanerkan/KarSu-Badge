@@ -1,0 +1,40 @@
+<resources>
+    <string name="main_title">KarsuBadge \u00d6rnekleri</string>
+    <string name="main_subtitle">Android i\u00e7in hafif bir badge drawable k\u00fct\u00fcphanesi</string>
+
+    <string name="section_number_badges">Say\u0131 Badge\'leri</string>
+    <string name="section_number_badges_desc">Say\u0131 g\u00f6steren yuvarlak badge\'ler. Say\u0131 s\u0131\u011fmay\u0131nca \u00fc\u00e7 nokta g\u00f6sterir.</string>
+
+    <string name="section_one_text_badges">Tek Metin Badge\'leri</string>
+    <string name="section_one_text_badges_desc">Tek metin etiketli dikd\u00f6rtgen badge\'ler.</string>
+
+    <string name="section_two_text_badges">\u00c7ift Metin Badge\'leri</string>
+    <string name="section_two_text_badges_desc">\u0130ki metin b\u00f6l\u00fcml\u00fc badge\'ler.</string>
+    <string name="subsection_standard">Standart</string>
+    <string name="subsection_complementary">Tamamlay\u0131c\u0131</string>
+
+    <string name="section_custom_styling">\u00d6zel Stil</string>
+    <string name="section_custom_styling_desc">textSize, padding, cornerRadius, typeface ve strokeWidth \u00f6zelle\u015ftirme \u00f6rnekleri.</string>
+
+    <string name="section_modifying_badges">Badge De\u011fi\u015ftirme</string>
+    <string name="section_modifying_badges_desc">buildUpon() ile klonlama veya setter ile yerinde de\u011fi\u015ftirme.</string>
+    <string name="subsection_build_upon">buildUpon()</string>
+    <string name="subsection_dynamic_setters">Dinamik Setter</string>
+
+    <string name="section_imageview_usage">ImageView Kullan\u0131m\u0131</string>
+    <string name="section_imageview_usage_desc">Badge, bir ImageView i\u00e7inde Drawable olarak g\u00f6sterilir.</string>
+
+    <string name="label_original">Orijinal:\u0020</string>
+    <string name="label_v2">\u0020\u0020v2:\u0020</string>
+    <string name="label_v3">\u0020\u0020v3:\u0020</string>
+    <string name="label_number_result">Say\u0131(55):\u0020</string>
+    <string name="label_text_result">\u0020\u0020Metin:\u0020</string>
+
+    <string name="badge_large">B\u00fcy\u00fck</string>
+    <string name="badge_wide">Geni\u015f</string>
+    <string name="badge_rounded">Yuvarlak</string>
+    <string name="badge_thick">Kal\u0131n</string>
+    <string name="badge_old">Eski</string>
+    <string name="badge_updated">G\u00fcncellendi</string>
+    <string name="badge_new">Yeni</string>
+</resources>

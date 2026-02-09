@@ -1,3 +1,51 @@
 <resources>
     <string name="app_name">KarsuBadge</string>
+
+    <!-- Header -->
+    <string name="main_title">KarsuBadge Examples</string>
+    <string name="main_subtitle">A lightweight badge drawable library for Android</string>
+
+    <!-- Section: Number Badges -->
+    <string name="section_number_badges">Number Badges</string>
+    <string name="section_number_badges_desc">Round badges that display a number. Shows ellipsis when the number does not fit.</string>
+
+    <!-- Section: Single Text Badges -->
+    <string name="section_one_text_badges">Single Text Badges</string>
+    <string name="section_one_text_badges_desc">Rectangular badges with a single text label.</string>
+
+    <!-- Section: Two Text Badges -->
+    <string name="section_two_text_badges">Two Text Badges</string>
+    <string name="section_two_text_badges_desc">Dual-section badges with two text segments.</string>
+    <string name="subsection_standard">Standard</string>
+    <string name="subsection_complementary">Complementary</string>
+
+    <!-- Section: Custom Styling -->
+    <string name="section_custom_styling">Custom Styling</string>
+    <string name="section_custom_styling_desc">Examples of textSize, padding, cornerRadius, typeface, and strokeWidth customization.</string>
+
+    <!-- Section: Modifying Badges -->
+    <string name="section_modifying_badges">Modifying Badges</string>
+    <string name="section_modifying_badges_desc">Clone with buildUpon() or mutate in place with setters.</string>
+    <string name="subsection_build_upon">buildUpon()</string>
+    <string name="subsection_dynamic_setters">Dynamic Setters</string>
+
+    <!-- Section: ImageView Usage -->
+    <string name="section_imageview_usage">ImageView Usage</string>
+    <string name="section_imageview_usage_desc">Badge rendered as a Drawable inside an ImageView.</string>
+
+    <!-- Labels used in badge demos -->
+    <string name="label_original">Original:\u0020</string>
+    <string name="label_v2">\u0020\u0020v2:\u0020</string>
+    <string name="label_v3">\u0020\u0020v3:\u0020</string>
+    <string name="label_number_result">Number(55):\u0020</string>
+    <string name="label_text_result">\u0020\u0020Text:\u0020</string>
+
+    <!-- Localized badge content -->
+    <string name="badge_large">Large</string>
+    <string name="badge_wide">Wide</string>
+    <string name="badge_rounded">Rounded</string>
+    <string name="badge_thick">Thick</string>
+    <string name="badge_old">Old</string>
+    <string name="badge_updated">Updated</string>
+    <string name="badge_new">New</string>
 </resources>

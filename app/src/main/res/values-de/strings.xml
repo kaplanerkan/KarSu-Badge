@@ -1,0 +1,40 @@
+<resources>
+    <string name="main_title">KarsuBadge Beispiele</string>
+    <string name="main_subtitle">Eine leichtgewichtige Badge-Drawable-Bibliothek f\u00fcr Android</string>
+
+    <string name="section_number_badges">Zahlen-Badges</string>
+    <string name="section_number_badges_desc">Runde Badges, die eine Zahl anzeigen. Zeigt Auslassungspunkte, wenn die Zahl nicht passt.</string>
+
+    <string name="section_one_text_badges">Einzeltext-Badges</string>
+    <string name="section_one_text_badges_desc">Rechteckige Badges mit einem einzelnen Textlabel.</string>
+
+    <string name="section_two_text_badges">Zweitext-Badges</string>
+    <string name="section_two_text_badges_desc">Badges mit zwei Textabschnitten.</string>
+    <string name="subsection_standard">Standard</string>
+    <string name="subsection_complementary">Komplement\u00e4r</string>
+
+    <string name="section_custom_styling">Benutzerdefiniertes Styling</string>
+    <string name="section_custom_styling_desc">Beispiele f\u00fcr textSize, padding, cornerRadius, typeface und strokeWidth Anpassungen.</string>
+
+    <string name="section_modifying_badges">Badges \u00e4ndern</string>
+    <string name="section_modifying_badges_desc">Klonen mit buildUpon() oder direkt \u00e4ndern mit Settern.</string>
+    <string name="subsection_build_upon">buildUpon()</string>
+    <string name="subsection_dynamic_setters">Dynamische Setter</string>
+
+    <string name="section_imageview_usage">ImageView-Verwendung</string>
+    <string name="section_imageview_usage_desc">Badge als Drawable in einer ImageView dargestellt.</string>
+
+    <string name="label_original">Original:\u0020</string>
+    <string name="label_v2">\u0020\u0020v2:\u0020</string>
+    <string name="label_v3">\u0020\u0020v3:\u0020</string>
+    <string name="label_number_result">Zahl(55):\u0020</string>
+    <string name="label_text_result">\u0020\u0020Text:\u0020</string>
+
+    <string name="badge_large">Gro\u00df</string>
+    <string name="badge_wide">Breit</string>
+    <string name="badge_rounded">Rund</string>
+    <string name="badge_thick">Dick</string>
+    <string name="badge_old">Alt</string>
+    <string name="badge_updated">Aktualisiert</string>
+    <string name="badge_new">Neu</string>
+</resources>

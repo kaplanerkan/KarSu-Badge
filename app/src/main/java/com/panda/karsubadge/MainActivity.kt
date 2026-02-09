@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.text.SpannableString
 import android.text.TextUtils
 import android.util.TypedValue
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -13,370 +12,169 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.panda.karsu_badge.BadgeDrawable
 import com.panda.karsu_badge.badgeDrawable
+import com.panda.karsubadge.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
         setupNumberBadges()
-        setupOneTextBadges()
+        setupSingleTextBadges()
         setupTwoTextBadges()
         setupComplementaryBadges()
-        setupCustomBadges()
+        setupCustomStylingBadges()
         setupBuildUponBadges()
-        setupDynamicBadges()
+        setupDynamicSetterBadges()
         setupImageViewBadge()
     }
 
-    // ════════════════════════════════════════
-    //  1) TYPE_NUMBER - Sayi badge ornekleri
-    // ════════════════════════════════════════
+    // -- Number badge examples --
 
     private fun setupNumberBadges() {
-        val tv = findViewById<TextView>(R.id.tvNumberBadges)
-
-        // Kucuk sayi - DSL kullanimi
-        val badge1 = badgeDrawable {
-            type(BadgeDrawable.TYPE_NUMBER)
-            number(3)
-        }
-
-        // Orta sayi - farkli renk
-        val badge2 = badgeDrawable {
-            type(BadgeDrawable.TYPE_NUMBER)
-            number(42)
-            badgeColor(0xff336699.toInt())
-        }
-
-        // Buyuk sayi - sigmazsa "..." gosterir
-        val badge3 = badgeDrawable {
-            type(BadgeDrawable.TYPE_NUMBER)
-            number(999)
-            badgeColor(0xff009688.toInt())
-        }
-
-        // Farkli metin rengi
-        val badge4 = badgeDrawable {
-            type(BadgeDrawable.TYPE_NUMBER)
-            number(7)
-            badgeColor(0xff222222.toInt())
-            textColor(0xffFFD700.toInt())
-        }
-
-        tv.text = SpannableString(
-            TextUtils.concat(
-                badge1.toSpannable(), "  ",
-                badge2.toSpannable(), "  ",
-                badge3.toSpannable(), "  ",
-                badge4.toSpannable()
-            )
+        binding.tvNumberBadges.showBadges(
+            badgeDrawable { type(BadgeDrawable.TYPE_NUMBER); number(3) },
+            badgeDrawable { type(BadgeDrawable.TYPE_NUMBER); number(42); badgeColor(0xff336699.toInt()) },
+            badgeDrawable { type(BadgeDrawable.TYPE_NUMBER); number(999); badgeColor(0xff009688.toInt()) },
+            badgeDrawable { type(BadgeDrawable.TYPE_NUMBER); number(7); badgeColor(0xff222222.toInt()); textColor(0xffFFD700.toInt()) }
         )
     }
 
-    // ════════════════════════════════════════
-    //  2) TYPE_ONLY_ONE_TEXT - Tek metin badge
-    // ════════════════════════════════════════
+    // -- Single text badge examples --
 
-    private fun setupOneTextBadges() {
-        val tv = findViewById<TextView>(R.id.tvOneTextBadges)
-
-        // Basit tek metin
-        val badge1 = badgeDrawable {
-            type(BadgeDrawable.TYPE_ONLY_ONE_TEXT)
-            text1("VIP")
-            badgeColor(0xff336699.toInt())
-        }
-
-        // Farkli renk
-        val badge2 = badgeDrawable {
-            type(BadgeDrawable.TYPE_ONLY_ONE_TEXT)
-            text1("YENi")
-            badgeColor(0xffE91E63.toInt())
-        }
-
-        // Uzun metin
-        val badge3 = badgeDrawable {
-            type(BadgeDrawable.TYPE_ONLY_ONE_TEXT)
-            text1("PREMIUM")
-            badgeColor(0xffFF9800.toInt())
-            textColor(0xff000000.toInt())
-        }
-
-        // Builder pattern ile
-        val badge4 = BadgeDrawable.Builder()
-            .type(BadgeDrawable.TYPE_ONLY_ONE_TEXT)
-            .text1("BETA")
-            .badgeColor(0xff9C27B0.toInt())
-            .build()
-
-        tv.text = SpannableString(
-            TextUtils.concat(
-                badge1.toSpannable(), "  ",
-                badge2.toSpannable(), "  ",
-                badge3.toSpannable(), "  ",
-                badge4.toSpannable()
-            )
+    private fun setupSingleTextBadges() {
+        binding.tvOneTextBadges.showBadges(
+            badgeDrawable { type(BadgeDrawable.TYPE_ONLY_ONE_TEXT); text1("VIP"); badgeColor(0xff336699.toInt()) },
+            badgeDrawable { type(BadgeDrawable.TYPE_ONLY_ONE_TEXT); text1(getString(R.string.badge_new)); badgeColor(0xffE91E63.toInt()) },
+            badgeDrawable { type(BadgeDrawable.TYPE_ONLY_ONE_TEXT); text1("PREMIUM"); badgeColor(0xffFF9800.toInt()); textColor(0xff000000.toInt()) },
+            BadgeDrawable.Builder()
+                .type(BadgeDrawable.TYPE_ONLY_ONE_TEXT)
+                .text1("BETA")
+                .badgeColor(0xff9C27B0.toInt())
+                .build()
         )
     }
 
-    // ════════════════════════════════════════
-    //  3) TYPE_WITH_TWO_TEXT - Cift metin badge
-    // ════════════════════════════════════════
+    // -- Two text (standard) badge examples --
 
     private fun setupTwoTextBadges() {
-        val tv = findViewById<TextView>(R.id.tvTwoTextBadges)
-
-        // Test durumu
-        val badge1 = badgeDrawable {
-            type(BadgeDrawable.TYPE_WITH_TWO_TEXT)
-            text1("TEST")
-            text2("Pass")
-            badgeColor(0xff4CAF50.toInt())
-        }
-
-        // Versiyon gosterimi
-        val badge2 = badgeDrawable {
-            type(BadgeDrawable.TYPE_WITH_TWO_TEXT)
-            text1("v2.1")
-            text2("Stable")
-            badgeColor(0xff2196F3.toInt())
-        }
-
-        // Durum gosterimi
-        val badge3 = badgeDrawable {
-            type(BadgeDrawable.TYPE_WITH_TWO_TEXT)
-            text1("BUILD")
-            text2("Fail")
-            badgeColor(0xffF44336.toInt())
-        }
-
-        tv.text = SpannableString(
-            TextUtils.concat(
-                badge1.toSpannable(), "  ",
-                badge2.toSpannable(), "  ",
-                badge3.toSpannable()
-            )
+        binding.tvTwoTextBadges.showBadges(
+            badgeDrawable { type(BadgeDrawable.TYPE_WITH_TWO_TEXT); text1("TEST"); text2("Pass"); badgeColor(0xff4CAF50.toInt()) },
+            badgeDrawable { type(BadgeDrawable.TYPE_WITH_TWO_TEXT); text1("v2.1"); text2("Stable"); badgeColor(0xff2196F3.toInt()) },
+            badgeDrawable { type(BadgeDrawable.TYPE_WITH_TWO_TEXT); text1("BUILD"); text2("Fail"); badgeColor(0xffF44336.toInt()) }
         )
     }
 
-    // ════════════════════════════════════════
-    //  4) TYPE_WITH_TWO_TEXT_COMPLEMENTARY
-    // ════════════════════════════════════════
+    // -- Two text (complementary) badge examples --
 
     private fun setupComplementaryBadges() {
-        val tv = findViewById<TextView>(R.id.tvComplementaryBadges)
-
-        // Seviye gosterimi
-        val badge1 = badgeDrawable {
-            type(BadgeDrawable.TYPE_WITH_TWO_TEXT_COMPLEMENTARY)
-            text1("LEVEL")
-            text2("10")
-            badgeColor(0xffCC9933.toInt())
-        }
-
-        // Puan gosterimi
-        val badge2 = badgeDrawable {
-            type(BadgeDrawable.TYPE_WITH_TWO_TEXT_COMPLEMENTARY)
-            text1("SCORE")
-            text2("98")
-            badgeColor(0xff673AB7.toInt())
-        }
-
-        // Ozel text2 arka plan rengi (text2Color)
-        val badge3 = badgeDrawable {
-            type(BadgeDrawable.TYPE_WITH_TWO_TEXT_COMPLEMENTARY)
-            text1("STATUS")
-            text2("Online")
-            badgeColor(0xff00796B.toInt())
-            text2Color(0xffB2DFDB.toInt())
-        }
-
-        tv.text = SpannableString(
-            TextUtils.concat(
-                badge1.toSpannable(), "  ",
-                badge2.toSpannable(), "  ",
-                badge3.toSpannable()
-            )
+        binding.tvComplementaryBadges.showBadges(
+            badgeDrawable { type(BadgeDrawable.TYPE_WITH_TWO_TEXT_COMPLEMENTARY); text1("LEVEL"); text2("10"); badgeColor(0xffCC9933.toInt()) },
+            badgeDrawable { type(BadgeDrawable.TYPE_WITH_TWO_TEXT_COMPLEMENTARY); text1("SCORE"); text2("98"); badgeColor(0xff673AB7.toInt()) },
+            badgeDrawable { type(BadgeDrawable.TYPE_WITH_TWO_TEXT_COMPLEMENTARY); text1("STATUS"); text2("Online"); badgeColor(0xff00796B.toInt()); text2Color(0xffB2DFDB.toInt()) }
         )
     }
 
-    // ════════════════════════════════════════
-    //  5) Ozel yapilandirma ornekleri
-    //     textSize, padding, cornerRadius, typeface, strokeWidth
-    // ════════════════════════════════════════
+    // -- Custom styling examples (textSize, padding, cornerRadius, typeface, strokeWidth) --
 
-    private fun setupCustomBadges() {
-        val tv = findViewById<TextView>(R.id.tvCustomBadges)
-
-        // Buyuk metin boyutu
-        val badge1 = badgeDrawable {
-            type(BadgeDrawable.TYPE_ONLY_ONE_TEXT)
-            text1("Buyuk")
-            textSize(spToPx(16f))
-            badgeColor(0xffE91E63.toInt())
-        }
-
-        // Ozel padding degerleri
-        val badge2 = badgeDrawable {
-            type(BadgeDrawable.TYPE_ONLY_ONE_TEXT)
-            text1("Genis")
-            badgeColor(0xff3F51B5.toInt())
-            padding(left = dpToPx(12f), top = dpToPx(4f), right = dpToPx(12f), bottom = dpToPx(4f))
-        }
-
-        // Buyuk kose yuvarlama
-        val badge3 = badgeDrawable {
-            type(BadgeDrawable.TYPE_ONLY_ONE_TEXT)
-            text1("Yuvarlak")
-            badgeColor(0xffFF5722.toInt())
-            cornerRadius(dpToPx(20f))
-        }
-
-        // Monospace typeface
-        val badge4 = badgeDrawable {
-            type(BadgeDrawable.TYPE_WITH_TWO_TEXT)
-            text1("MONO")
-            text2("Font")
-            badgeColor(0xff607D8B.toInt())
-            typeface(Typeface.MONOSPACE)
-        }
-
-        // Kalin stroke
-        val badge5 = badgeDrawable {
-            type(BadgeDrawable.TYPE_WITH_TWO_TEXT)
-            text1("KALIN")
-            text2("Border")
-            badgeColor(0xff795548.toInt())
-            strokeWidth(dpToPx(3f).toInt())
-        }
-
-        tv.text = SpannableString(
-            TextUtils.concat(
-                badge1.toSpannable(), "  ",
-                badge2.toSpannable(), "  ",
-                badge3.toSpannable(), "  ",
-                badge4.toSpannable(), "  ",
-                badge5.toSpannable()
-            )
+    private fun setupCustomStylingBadges() {
+        binding.tvCustomBadges.showBadges(
+            badgeDrawable { type(BadgeDrawable.TYPE_ONLY_ONE_TEXT); text1(getString(R.string.badge_large)); textSize(spToPx(16f)); badgeColor(0xffE91E63.toInt()) },
+            badgeDrawable { type(BadgeDrawable.TYPE_ONLY_ONE_TEXT); text1(getString(R.string.badge_wide)); badgeColor(0xff3F51B5.toInt()); padding(left = dpToPx(12f), top = dpToPx(4f), right = dpToPx(12f), bottom = dpToPx(4f)) },
+            badgeDrawable { type(BadgeDrawable.TYPE_ONLY_ONE_TEXT); text1(getString(R.string.badge_rounded)); badgeColor(0xffFF5722.toInt()); cornerRadius(dpToPx(20f)) },
+            badgeDrawable { type(BadgeDrawable.TYPE_WITH_TWO_TEXT); text1("MONO"); text2("Font"); badgeColor(0xff607D8B.toInt()); typeface(Typeface.MONOSPACE) },
+            badgeDrawable { type(BadgeDrawable.TYPE_WITH_TWO_TEXT); text1(getString(R.string.badge_thick)); text2("Border"); badgeColor(0xff795548.toInt()); strokeWidth(dpToPx(3f).toInt()) }
         )
     }
 
-    // ════════════════════════════════════════
-    //  6) buildUpon() - Mevcut badge'den turetme
-    // ════════════════════════════════════════
+    // -- buildUpon() cloning example --
 
     private fun setupBuildUponBadges() {
-        val tv = findViewById<TextView>(R.id.tvBuildUponBadges)
-
-        // Orijinal badge
         val original = badgeDrawable {
             type(BadgeDrawable.TYPE_WITH_TWO_TEXT_COMPLEMENTARY)
-            text1("VER")
-            text2("1.0")
-            badgeColor(0xff2196F3.toInt())
+            text1("VER"); text2("1.0"); badgeColor(0xff2196F3.toInt())
         }
+        val v2 = original.buildUpon().text2("2.0").build()
+        val v3 = original.buildUpon().text2("3.0").badgeColor(0xffF44336.toInt()).build()
 
-        // buildUpon ile sadece text2'yi degistir
-        val modified1 = original.buildUpon()
-            .text2("2.0")
-            .build()
-
-        // buildUpon ile rengi de degistir
-        val modified2 = original.buildUpon()
-            .text2("3.0")
-            .badgeColor(0xffF44336.toInt())
-            .build()
-
-        tv.text = SpannableString(
-            TextUtils.concat(
-                "Orijinal: ", original.toSpannable(),
-                "  v2: ", modified1.toSpannable(),
-                "  v3: ", modified2.toSpannable()
-            )
+        binding.tvBuildUponBadges.showLabeledBadges(
+            getString(R.string.label_original) to original,
+            getString(R.string.label_v2) to v2,
+            getString(R.string.label_v3) to v3
         )
     }
 
-    // ════════════════════════════════════════
-    //  7) Dinamik Setter kullanimi
-    // ════════════════════════════════════════
+    // -- Dynamic setter mutation example --
 
-    private fun setupDynamicBadges() {
-        val tv = findViewById<TextView>(R.id.tvDynamicBadges)
+    private fun setupDynamicSetterBadges() {
+        val numberBadge = BadgeDrawable.Builder()
+            .type(BadgeDrawable.TYPE_NUMBER).number(1).badgeColor(0xffCC3333.toInt()).build()
+        numberBadge.setNumber(55)
+        numberBadge.setBadgeColor(0xff009688.toInt())
 
-        // Badge olustur ve sonradan setter ile guncelle
-        val badge = BadgeDrawable.Builder()
-            .type(BadgeDrawable.TYPE_NUMBER)
-            .number(1)
-            .badgeColor(0xffCC3333.toInt())
-            .build()
+        val textBadge = BadgeDrawable.Builder()
+            .type(BadgeDrawable.TYPE_ONLY_ONE_TEXT).text1(getString(R.string.badge_old)).badgeColor(0xff9E9E9E.toInt()).build()
+        textBadge.setText1(getString(R.string.badge_updated))
+        textBadge.setBadgeColor(0xff4CAF50.toInt())
 
-        // Setter ile sayiyi degistir
-        badge.setNumber(55)
-        // Setter ile rengi degistir
-        badge.setBadgeColor(0xff009688.toInt())
-
-        // Tip degistirme ornegi
-        val badge2 = BadgeDrawable.Builder()
-            .type(BadgeDrawable.TYPE_ONLY_ONE_TEXT)
-            .text1("Eski")
-            .badgeColor(0xff9E9E9E.toInt())
-            .build()
-
-        // Setter ile metin degistir
-        badge2.setText1("Guncellendi")
-        badge2.setBadgeColor(0xff4CAF50.toInt())
-        badge2.setTextColor(0xffFFFFFF.toInt())
-
-        tv.text = SpannableString(
-            TextUtils.concat(
-                "Sayi(55): ", badge.toSpannable(),
-                "  Metin: ", badge2.toSpannable()
-            )
+        binding.tvDynamicBadges.showLabeledBadges(
+            getString(R.string.label_number_result) to numberBadge,
+            getString(R.string.label_text_result) to textBadge
         )
     }
 
-    // ════════════════════════════════════════
-    //  8) ImageView ile kullanim
-    // ════════════════════════════════════════
+    // -- ImageView badge example --
 
     private fun setupImageViewBadge() {
-        val iv = findViewById<ImageView>(R.id.ivBadge)
-
         val badge = BadgeDrawable.Builder()
             .type(BadgeDrawable.TYPE_WITH_TWO_TEXT_COMPLEMENTARY)
-            .badgeColor(0xff336633.toInt())
+            .badgeColor(0xff006A6A.toInt())
             .textSize(spToPx(14f))
             .text1("Author")
             .text2("KarsuBadge")
             .cornerRadius(dpToPx(4f))
-            .padding(
-                left = dpToPx(6f),
-                top = dpToPx(4f),
-                right = dpToPx(6f),
-                bottom = dpToPx(4f),
-                center = dpToPx(6f)
-            )
+            .padding(dpToPx(6f), dpToPx(4f), dpToPx(6f), dpToPx(4f), dpToPx(6f))
             .build()
-
-        iv.setImageDrawable(badge)
+        binding.ivBadge.setImageDrawable(badge)
     }
 
-    // ════════════════════════════════════════
-    //  Yardimci birim donusum fonksiyonlari
-    // ════════════════════════════════════════
+    // -- Helper: display multiple badges in a TextView --
 
-    private fun spToPx(sp: Float): Float {
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, resources.displayMetrics)
+    private fun TextView.showBadges(vararg badges: BadgeDrawable) {
+        val parts = mutableListOf<CharSequence>()
+        badges.forEachIndexed { i, badge ->
+            if (i > 0) parts.add("  ")
+            parts.add(badge.toSpannable())
+        }
+        text = SpannableString(TextUtils.concat(*parts.toTypedArray()))
     }
 
-    private fun dpToPx(dp: Float): Float {
-        return dp * resources.displayMetrics.density + 0.5f
+    // -- Helper: display labeled badges (e.g. "Original: [badge]  v2: [badge]") --
+
+    private fun TextView.showLabeledBadges(vararg pairs: Pair<String, BadgeDrawable>) {
+        val parts = mutableListOf<CharSequence>()
+        pairs.forEach { (label, badge) ->
+            parts.add(label)
+            parts.add(badge.toSpannable())
+        }
+        text = SpannableString(TextUtils.concat(*parts.toTypedArray()))
     }
+
+    // -- Unit conversion utilities --
+
+    private fun spToPx(sp: Float): Float =
+        TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, resources.displayMetrics)
+
+    private fun dpToPx(dp: Float): Float =
+        TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.displayMetrics)
 }
