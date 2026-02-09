@@ -29,6 +29,7 @@ import android.graphics.drawable.shapes.RoundRectShape
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ImageSpan
+import android.util.TypedValue
 import androidx.annotation.ColorInt
 import androidx.annotation.IntDef
 
@@ -91,8 +92,9 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
          * @return piksel cinsinden deger
          */
         private fun spToPixels(spValue: Float): Float {
-            val fontScale = Resources.getSystem().displayMetrics.scaledDensity
-            return spValue * fontScale + 0.5f
+            return TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_SP, spValue, Resources.getSystem().displayMetrics
+            )
         }
     }
 
@@ -106,14 +108,14 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
      * Builder tarafindan olusturulur ve BadgeDrawable'a aktarilir.
      */
     internal class Config(
-        @BadgeType var badgeType: Int = TYPE_NUMBER,
+        @param:BadgeType var badgeType: Int = TYPE_NUMBER,
         var number: Int = 0,
         var text1: String = "",
         var text2: String = "",
         var textSize: Float = spToPixels(12f),
-        @ColorInt var badgeColor: Int = 0xffCC3333.toInt(),
-        @ColorInt var textColor: Int = 0xffFFFFFF.toInt(),
-        @ColorInt var text2Color: Int? = null,
+        @param:ColorInt var badgeColor: Int = 0xffCC3333.toInt(),
+        @param:ColorInt var textColor: Int = 0xffFFFFFF.toInt(),
+        @param:ColorInt var text2Color: Int? = null,
         var typeface: Typeface = Typeface.DEFAULT_BOLD,
         var cornerRadius: Float = dipToPixels(2f),
         var paddingLeft: Float = dipToPixels(2f),

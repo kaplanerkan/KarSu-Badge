@@ -4,6 +4,7 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.TextUtils
+import android.util.TypedValue
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -372,7 +373,7 @@ class MainActivity : AppCompatActivity() {
     // ════════════════════════════════════════
 
     private fun spToPx(sp: Float): Float {
-        return sp * resources.displayMetrics.scaledDensity + 0.5f
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, resources.displayMetrics)
     }
 
     private fun dpToPx(dp: Float): Float {
