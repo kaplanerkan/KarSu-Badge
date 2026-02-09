@@ -45,7 +45,7 @@ dependencyResolutionManagement {
 **app/build.gradle.kts**
 ```kotlin
 dependencies {
-    implementation("com.github.kaplanerkan:KarSu-Badge:1.0.0")
+    implementation("com.github.kaplanerkan:KarSu-Badge:1.0.1")
 }
 ```
 
