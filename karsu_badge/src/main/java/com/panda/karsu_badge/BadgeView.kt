@@ -64,20 +64,22 @@ class BadgeView @JvmOverloads constructor(
                     builder.cornerRadius(ta.getDimension(R.styleable.BadgeView_badgeCornerRadius, 0f))
                 }
 
-                // Padding: read each value individually, use Config defaults for unset ones
-                val defaultConfig = BadgeDrawable.Config()
+                // Padding: only call builder.padding() if at least one value is specified.
+                // Unset values use named-parameter defaults from the Builder (which reads Config defaults).
                 val hasLeft = ta.hasValue(R.styleable.BadgeView_badgePaddingLeft)
                 val hasTop = ta.hasValue(R.styleable.BadgeView_badgePaddingTop)
                 val hasRight = ta.hasValue(R.styleable.BadgeView_badgePaddingRight)
                 val hasBottom = ta.hasValue(R.styleable.BadgeView_badgePaddingBottom)
                 val hasCenter = ta.hasValue(R.styleable.BadgeView_badgePaddingCenter)
                 if (hasLeft || hasTop || hasRight || hasBottom || hasCenter) {
+                    // Build a temporary config only when needed, to read defaults
+                    val defaults = BadgeDrawable.Config()
                     builder.padding(
-                        left = if (hasLeft) ta.getDimension(R.styleable.BadgeView_badgePaddingLeft, 0f) else defaultConfig.paddingLeft,
-                        top = if (hasTop) ta.getDimension(R.styleable.BadgeView_badgePaddingTop, 0f) else defaultConfig.paddingTop,
-                        right = if (hasRight) ta.getDimension(R.styleable.BadgeView_badgePaddingRight, 0f) else defaultConfig.paddingRight,
-                        bottom = if (hasBottom) ta.getDimension(R.styleable.BadgeView_badgePaddingBottom, 0f) else defaultConfig.paddingBottom,
-                        center = if (hasCenter) ta.getDimension(R.styleable.BadgeView_badgePaddingCenter, 0f) else defaultConfig.paddingCenter
+                        left = if (hasLeft) ta.getDimension(R.styleable.BadgeView_badgePaddingLeft, 0f) else defaults.paddingLeft,
+                        top = if (hasTop) ta.getDimension(R.styleable.BadgeView_badgePaddingTop, 0f) else defaults.paddingTop,
+                        right = if (hasRight) ta.getDimension(R.styleable.BadgeView_badgePaddingRight, 0f) else defaults.paddingRight,
+                        bottom = if (hasBottom) ta.getDimension(R.styleable.BadgeView_badgePaddingBottom, 0f) else defaults.paddingBottom,
+                        center = if (hasCenter) ta.getDimension(R.styleable.BadgeView_badgePaddingCenter, 0f) else defaults.paddingCenter
                     )
                 }
 
@@ -92,6 +94,12 @@ class BadgeView @JvmOverloads constructor(
         badgeDrawable = builder.build()
     }
 
+    // Cached bounds to avoid re-measuring in onDraw
+    private var lastBoundsLeft = -1
+    private var lastBoundsTop = -1
+    private var lastBoundsRight = -1
+    private var lastBoundsBottom = -1
+
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val intrinsicW = badgeDrawable.intrinsicWidth + paddingLeft + paddingRight
         val intrinsicH = badgeDrawable.intrinsicHeight + paddingTop + paddingBottom
@@ -101,20 +109,33 @@ class BadgeView @JvmOverloads constructor(
         setMeasuredDimension(w, h)
     }
 
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        updateDrawableBounds()
+    }
+
+    private fun updateDrawableBounds() {
+        val l = paddingLeft
+        val t = paddingTop
+        val r = width - paddingRight
+        val b = height - paddingBottom
+        if (l != lastBoundsLeft || t != lastBoundsTop || r != lastBoundsRight || b != lastBoundsBottom) {
+            lastBoundsLeft = l
+            lastBoundsTop = t
+            lastBoundsRight = r
+            lastBoundsBottom = b
+            badgeDrawable.setBounds(l, t, r, b)
+        }
+    }
+
     override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
-        badgeDrawable.setBounds(
-            paddingLeft,
-            paddingTop,
-            width - paddingRight,
-            height - paddingBottom
-        )
         badgeDrawable.draw(canvas)
     }
 
     /** Replaces the internal BadgeDrawable and refreshes the view. */
     fun setBadgeDrawable(drawable: BadgeDrawable) {
         badgeDrawable = drawable
+        lastBoundsLeft = -1 // force bounds recalculation
         requestLayout()
         invalidate()
     }

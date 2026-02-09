@@ -170,6 +170,11 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
     /** Measured text2 width in pixels. */
     private var text2Width: Int = 0
 
+    // Cached truncated text to avoid String allocations in draw()
+    private var cachedDisplayText1: String = ""
+    private var cachedDisplayText2: String = ""
+    private var cachedDisplayNumber: String = ""
+
     init {
         setCornerRadius(config.cornerRadius)
 
@@ -300,6 +305,7 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
     /** Sets the number to display (for TYPE_NUMBER). */
     fun setNumber(number: Int) {
         config.number = number
+        cachedDisplayNumber = cutNumber(number, badgeWidth)
     }
 
     /** Returns the first text field. */
@@ -500,6 +506,11 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
                 }
             }
         }
+
+        // Cache truncated display strings to avoid allocations in draw()
+        cachedDisplayNumber = cutNumber(config.number, badgeWidth)
+        cachedDisplayText1 = cutText(t1, text1Width)
+        cachedDisplayText2 = cutText(t2, text2Width)
     }
 
     // ════════════════════════════════════════
@@ -545,14 +556,11 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
         val textCx = bounds.centerX().toFloat()
         val textCy = bounds.centerY() - (fontMetrics.bottom + fontMetrics.top) / 2f
 
-        val t1 = config.text1
-        val t2 = config.text2
-
         when (config.badgeType) {
             // Single text: draw text1 at badge center
             TYPE_ONLY_ONE_TEXT -> {
                 paint.color = config.textColor
-                canvas.drawText(cutText(t1, text1Width), textCx, textCy, paint)
+                canvas.drawText(cachedDisplayText1, textCx, textCy, paint)
             }
 
             // Complementary dual text: text1 on left, text2 on right with inverted colors
@@ -560,7 +568,7 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
                 // Draw text1 on the left side
                 paint.color = config.textColor
                 canvas.drawText(
-                    t1,
+                    cachedDisplayText1,
                     marginLeftAndRight + config.paddingLeft + text1Width / 2f,
                     textCy,
                     paint
@@ -580,7 +588,7 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
                 // Draw text2 with badge color (inverted)
                 paint.color = config.badgeColor
                 canvas.drawText(
-                    cutText(t2, text2Width),
+                    cachedDisplayText2,
                     bounds.width() - marginLeftAndRight - config.paddingRight - text2Width / 2f,
                     textCy,
                     paint
@@ -603,7 +611,7 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
                 // Draw text1 in badge color
                 paint.color = config.badgeColor
                 canvas.drawText(
-                    t1,
+                    cachedDisplayText1,
                     text1Width / 2f + marginLeftAndRight + config.paddingLeft,
                     textCy,
                     paint
@@ -623,7 +631,7 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
                 // Draw text2 in badge color
                 paint.color = config.badgeColor
                 canvas.drawText(
-                    cutText(t2, text2Width),
+                    cachedDisplayText2,
                     bounds.width() - marginLeftAndRight - config.paddingRight - text2Width / 2f,
                     textCy,
                     paint
@@ -633,7 +641,7 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
             // Number badge: draw number at center
             else -> { // TYPE_NUMBER
                 paint.color = config.textColor
-                canvas.drawText(cutNumber(config.number, badgeWidth), textCx, textCy, paint)
+                canvas.drawText(cachedDisplayNumber, textCx, textCy, paint)
             }
         }
     }
