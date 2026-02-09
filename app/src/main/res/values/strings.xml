@@ -40,6 +40,43 @@
     <string name="label_number_result">Number(55):\u0020</string>
     <string name="label_text_result">\u0020\u0020Text:\u0020</string>
 
+    <!-- Section: Practical Usage -->
+    <string name="section_practical_usage">Practical Usage</string>
+    <string name="section_practical_usage_desc">Real-world examples: badges inline with text and BadgeView in XML.</string>
+    <string name="subsection_inline_textview">Inline in TextView</string>
+    <string name="subsection_xml_badgeview">BadgeView in XML</string>
+
+    <!-- Section: Interactive Configurator -->
+    <string name="section_configurator">Interactive Configurator</string>
+    <string name="section_configurator_desc">Build and customize a badge in real-time with sliders and controls.</string>
+    <string name="btn_launch_configurator">Open Configurator</string>
+
+    <!-- Configurator Activity -->
+    <string name="configurator_title">Badge Configurator</string>
+    <string name="configurator_preview">Live Preview</string>
+    <string name="configurator_spannable_preview">Spannable (TextView)</string>
+    <string name="configurator_badge_type">Badge Type</string>
+    <string name="configurator_number">Number</string>
+    <string name="configurator_text1">Text 1</string>
+    <string name="configurator_text2">Text 2</string>
+    <string name="configurator_colors">Colors</string>
+    <string name="configurator_badge_color">Badge Color</string>
+    <string name="configurator_text_color">Text Color</string>
+    <string name="configurator_text2_color">Text 2 Color</string>
+    <string name="configurator_hex_color">Hex (#RRGGBB)</string>
+    <string name="configurator_dimensions">Dimensions</string>
+    <string name="configurator_text_size">Text Size</string>
+    <string name="configurator_corner_radius">Corner Radius</string>
+    <string name="configurator_padding">Padding</string>
+    <string name="configurator_padding_center">Center Padding</string>
+    <string name="configurator_stroke_width">Stroke Width</string>
+
+    <!-- Badge type names -->
+    <string name="type_number">Number</string>
+    <string name="type_one_text">Single Text</string>
+    <string name="type_two_text">Two Text (Standard)</string>
+    <string name="type_two_text_complementary">Two Text (Complementary)</string>
+
     <!-- Localized badge content -->
     <string name="badge_large">Large</string>
     <string name="badge_wide">Wide</string>

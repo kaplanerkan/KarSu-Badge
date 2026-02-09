@@ -30,6 +30,39 @@
     <string name="label_number_result">Say\u0131(55):\u0020</string>
     <string name="label_text_result">\u0020\u0020Metin:\u0020</string>
 
+    <string name="section_practical_usage">Pratik Kullan\u0131m</string>
+    <string name="section_practical_usage_desc">Ger\u00e7ek d\u00fcnya \u00f6rnekleri: metin i\u00e7inde badge ve XML\'de BadgeView.</string>
+    <string name="subsection_inline_textview">TextView i\u00e7inde</string>
+    <string name="subsection_xml_badgeview">XML\'de BadgeView</string>
+
+    <string name="section_configurator">Etkile\u015fimli Yap\u0131land\u0131r\u0131c\u0131</string>
+    <string name="section_configurator_desc">Kayd\u0131r\u0131c\u0131lar ve kontroller ile ger\u00e7ek zamanl\u0131 badge olu\u015fturun.</string>
+    <string name="btn_launch_configurator">Yap\u0131land\u0131r\u0131c\u0131y\u0131 A\u00e7</string>
+
+    <string name="configurator_title">Badge Yap\u0131land\u0131r\u0131c\u0131</string>
+    <string name="configurator_preview">\u00d6nizleme</string>
+    <string name="configurator_spannable_preview">Spannable (TextView)</string>
+    <string name="configurator_badge_type">Badge T\u00fcr\u00fc</string>
+    <string name="configurator_number">Say\u0131</string>
+    <string name="configurator_text1">Metin 1</string>
+    <string name="configurator_text2">Metin 2</string>
+    <string name="configurator_colors">Renkler</string>
+    <string name="configurator_badge_color">Badge Rengi</string>
+    <string name="configurator_text_color">Metin Rengi</string>
+    <string name="configurator_text2_color">Metin 2 Rengi</string>
+    <string name="configurator_hex_color">Hex (#RRGGBB)</string>
+    <string name="configurator_dimensions">Boyutlar</string>
+    <string name="configurator_text_size">Metin Boyutu</string>
+    <string name="configurator_corner_radius">K\u00f6\u015fe Yar\u0131\u00e7ap\u0131</string>
+    <string name="configurator_padding">Dolgu</string>
+    <string name="configurator_padding_center">Orta Dolgu</string>
+    <string name="configurator_stroke_width">\u00c7izgi Kal\u0131nl\u0131\u011f\u0131</string>
+
+    <string name="type_number">Say\u0131</string>
+    <string name="type_one_text">Tek Metin</string>
+    <string name="type_two_text">\u00c7ift Metin (Standart)</string>
+    <string name="type_two_text_complementary">\u00c7ift Metin (Tamamlay\u0131c\u0131)</string>
+
     <string name="badge_large">B\u00fcy\u00fck</string>
     <string name="badge_wide">Geni\u015f</string>
     <string name="badge_rounded">Yuvarlak</string>

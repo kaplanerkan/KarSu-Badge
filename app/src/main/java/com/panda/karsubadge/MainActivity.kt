@@ -1,5 +1,6 @@
 package com.panda.karsubadge
 
+import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.SpannableString
@@ -37,6 +38,8 @@ class MainActivity : AppCompatActivity() {
         setupBuildUponBadges()
         setupDynamicSetterBadges()
         setupImageViewBadge()
+        setupPracticalUsage()
+        setupConfiguratorButton()
     }
 
     // -- Number badge examples --
@@ -146,6 +149,44 @@ class MainActivity : AppCompatActivity() {
             .padding(dpToPx(6f), dpToPx(4f), dpToPx(6f), dpToPx(4f), dpToPx(6f))
             .build()
         binding.ivBadge.setImageDrawable(badge)
+    }
+
+    // -- Practical usage: inline badges with text, like real-world labels --
+
+    private fun setupPracticalUsage() {
+        val priceBadge = badgeDrawable {
+            type(BadgeDrawable.TYPE_WITH_TWO_TEXT_COMPLEMENTARY)
+            text1("PRICE"); text2("$29.99"); badgeColor(0xff006A6A.toInt())
+            textSize(spToPx(14f)); cornerRadius(dpToPx(4f))
+            padding(dpToPx(6f), dpToPx(4f), dpToPx(6f), dpToPx(4f), dpToPx(6f))
+        }
+        val statusBadge = badgeDrawable {
+            type(BadgeDrawable.TYPE_ONLY_ONE_TEXT)
+            text1("Online"); badgeColor(0xff4CAF50.toInt())
+            textSize(spToPx(12f)); cornerRadius(dpToPx(4f))
+            padding(dpToPx(6f), dpToPx(3f), dpToPx(6f), dpToPx(3f))
+        }
+        val versionBadge = badgeDrawable {
+            type(BadgeDrawable.TYPE_WITH_TWO_TEXT)
+            text1("v2.1"); text2("Stable"); badgeColor(0xff2196F3.toInt())
+            textSize(spToPx(12f)); cornerRadius(dpToPx(4f))
+            padding(dpToPx(6f), dpToPx(3f), dpToPx(6f), dpToPx(3f), dpToPx(4f))
+        }
+
+        val parts = mutableListOf<CharSequence>(
+            "Price: ", priceBadge.toSpannable(),
+            "  Status: ", statusBadge.toSpannable(),
+            "  Version: ", versionBadge.toSpannable()
+        )
+        binding.tvPracticalInline.text = SpannableString(TextUtils.concat(*parts.toTypedArray()))
+    }
+
+    // -- Configurator launcher --
+
+    private fun setupConfiguratorButton() {
+        binding.btnLaunchConfigurator.setOnClickListener {
+            startActivity(Intent(this, ConfiguratorActivity::class.java))
+        }
     }
 
     // -- Helper: display multiple badges in a TextView --

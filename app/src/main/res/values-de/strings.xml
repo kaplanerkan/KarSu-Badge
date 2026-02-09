@@ -30,6 +30,39 @@
     <string name="label_number_result">Zahl(55):\u0020</string>
     <string name="label_text_result">\u0020\u0020Text:\u0020</string>
 
+    <string name="section_practical_usage">Praktische Verwendung</string>
+    <string name="section_practical_usage_desc">Praxisbeispiele: Badges inline mit Text und BadgeView in XML.</string>
+    <string name="subsection_inline_textview">Inline im TextView</string>
+    <string name="subsection_xml_badgeview">BadgeView in XML</string>
+
+    <string name="section_configurator">Interaktiver Konfigurator</string>
+    <string name="section_configurator_desc">Erstelle und passe ein Badge in Echtzeit mit Schiebereglern und Steuerelementen an.</string>
+    <string name="btn_launch_configurator">Konfigurator \u00f6ffnen</string>
+
+    <string name="configurator_title">Badge-Konfigurator</string>
+    <string name="configurator_preview">Vorschau</string>
+    <string name="configurator_spannable_preview">Spannable (TextView)</string>
+    <string name="configurator_badge_type">Badge-Typ</string>
+    <string name="configurator_number">Zahl</string>
+    <string name="configurator_text1">Text 1</string>
+    <string name="configurator_text2">Text 2</string>
+    <string name="configurator_colors">Farben</string>
+    <string name="configurator_badge_color">Badge-Farbe</string>
+    <string name="configurator_text_color">Textfarbe</string>
+    <string name="configurator_text2_color">Text-2-Farbe</string>
+    <string name="configurator_hex_color">Hex (#RRGGBB)</string>
+    <string name="configurator_dimensions">Abmessungen</string>
+    <string name="configurator_text_size">Textgr\u00f6\u00dfe</string>
+    <string name="configurator_corner_radius">Eckenradius</string>
+    <string name="configurator_padding">Innenabstand</string>
+    <string name="configurator_padding_center">Mitte-Abstand</string>
+    <string name="configurator_stroke_width">Strichst\u00e4rke</string>
+
+    <string name="type_number">Zahl</string>
+    <string name="type_one_text">Einzeltext</string>
+    <string name="type_two_text">Zweitext (Standard)</string>
+    <string name="type_two_text_complementary">Zweitext (Komplement\u00e4r)</string>
+
     <string name="badge_large">Gro\u00df</string>
     <string name="badge_wide">Breit</string>
     <string name="badge_rounded">Rund</string>

@@ -20,6 +20,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ConfiguratorActivity"
+            android:exported="false"
+            android:label="@string/configurator_title" />
     </application>
 
 </manifest>

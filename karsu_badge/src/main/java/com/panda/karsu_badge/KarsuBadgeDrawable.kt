@@ -398,6 +398,40 @@ class BadgeDrawable private constructor(private val config: Config) : Drawable()
         config.strokeWidth = width
     }
 
+    /** Returns the text2 section color, or null if using textColor as fallback. */
+    @ColorInt
+    fun getText2Color(): Int? = config.text2Color
+
+    /** Sets the text2 section color (for COMPLEMENTARY type). Pass null to use textColor. */
+    fun setText2Color(@ColorInt color: Int?) {
+        config.text2Color = color
+    }
+
+    /** Returns the left padding in pixels. */
+    fun getPaddingLeftValue(): Float = config.paddingLeft
+
+    /** Returns the top padding in pixels. */
+    fun getPaddingTopValue(): Float = config.paddingTop
+
+    /** Returns the right padding in pixels. */
+    fun getPaddingRightValue(): Float = config.paddingRight
+
+    /** Returns the bottom padding in pixels. */
+    fun getPaddingBottomValue(): Float = config.paddingBottom
+
+    /** Returns the center padding in pixels (spacing between dual-text sections). */
+    fun getPaddingCenterValue(): Float = config.paddingCenter
+
+    /** Sets all padding values and re-measures the badge. */
+    fun setPaddingValues(left: Float, top: Float, right: Float, bottom: Float, center: Float) {
+        config.paddingLeft = left
+        config.paddingTop = top
+        config.paddingRight = right
+        config.paddingBottom = bottom
+        config.paddingCenter = center
+        measureBadge()
+    }
+
     // ════════════════════════════════════════
     //  Measurement - Calculates badge dimensions
     // ════════════════════════════════════════

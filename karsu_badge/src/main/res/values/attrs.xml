@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="BadgeView">
+        <!-- Badge type: number, oneText, twoText, twoTextComplementary -->
+        <attr name="badgeType" format="enum">
+            <enum name="number" value="1" />
+            <enum name="oneText" value="2" />
+            <enum name="twoText" value="4" />
+            <enum name="twoTextComplementary" value="8" />
+        </attr>
+
+        <!-- Number to display (TYPE_NUMBER) -->
+        <attr name="badgeNumber" format="integer" />
+
+        <!-- Text fields -->
+        <attr name="badgeText1" format="string" />
+        <attr name="badgeText2" format="string" />
+
+        <!-- Text size in sp/dp (defaults to 12sp internally) -->
+        <attr name="badgeTextSize" format="dimension" />
+
+        <!-- Colors -->
+        <attr name="badgeColor" format="color" />
+        <attr name="badgeTextColor" format="color" />
+        <attr name="badgeText2Color" format="color" />
+
+        <!-- Corner radius (defaults to 2dp internally) -->
+        <attr name="badgeCornerRadius" format="dimension" />
+
+        <!-- Padding values (defaults to 2dp internally) -->
+        <attr name="badgePaddingLeft" format="dimension" />
+        <attr name="badgePaddingTop" format="dimension" />
+        <attr name="badgePaddingRight" format="dimension" />
+        <attr name="badgePaddingBottom" format="dimension" />
+        <attr name="badgePaddingCenter" format="dimension" />
+
+        <!-- Stroke width (defaults to 1dp internally) -->
+        <attr name="badgeStrokeWidth" format="dimension" />
+    </declare-styleable>
+</resources>
